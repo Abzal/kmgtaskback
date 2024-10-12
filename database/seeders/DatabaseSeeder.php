@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             WellStatusSeeder::class,
             HorizonSeeder::class,
             WellSeeder::class,
+            AuthSeeder::class
         ]);
     }
 }
