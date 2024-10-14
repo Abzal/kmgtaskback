@@ -20,7 +20,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/wells', [WellController::class, 'index'])->middleware('permission:read wells');
     Route::get('/well-numbers', [WellController::class, 'getWellNumbers'])->middleware('permission:read wells');
     Route::put('/wells', [WellController::class, 'updateMultiple'])->middleware('permission:save wells');
-    Route::patch('/wells/toggle-save', [WellController::class, 'toggleMultipleSave'])->middleware('permission:save wells');
+    Route::patch('/wells/save', [WellController::class, 'saveMultiple'])->middleware('permission:save wells');
+    Route::patch('/wells/unsave', [WellController::class, 'unsaveMultiple'])->middleware('permission:delete wells');
+
 
     // Эндпоинты для справочника
     Route::get('/handbook', [HandBookController::class, 'index'])->middleware('permission:read wells');

@@ -90,45 +90,38 @@ class WellController extends Controller
         }
 
         // Return a success response
-        return response()->json(['message' => 'Wells updated successfully'], 200);
-    }
-
-
-    // Обновление данных скважины
-    public function update(Request $request, $id)
-    {
-        $well = Well::findOrFail($id);
-        $validatedData = $request->validate([
-            'field' => 'required|string|max:255',
-            'well_number' => 'required|string|max:255',
-            'well_type' => 'required|string|max:255',
-            'horizon' => 'required|string|max:255',
-        ]);
-
-        $well->update($validatedData);
-
-        return response()->json($well, 200);
+        return response()->json(['message' => 'Скважины обнавлены успешно'], 200);
     }
 
     // Изменение статуса сохраненности
-    public function toggleMultipleSave(Request $request)
+    public function toggleSaveStatus(Request $request, $status)
     {
-
         $validatedData = $request->validate([
-            'well_ids' => 'required|array',
-            'well_ids.*' => 'required|exists:wells,id'
+            'well_numbers' => 'required|array',
+            'well_numbers.*' => 'required|exists:wells,well_number'  // Check that each well_number exists in the wells table
         ]);
 
-        $wells = Well::whereIn('id', $validatedData['well_ids'])->get();
+        $wells = Well::whereIn('well_number', $validatedData['well_numbers'])->get();
 
         foreach ($wells as $well) {
-            $well->is_saved = !$well->is_saved;
+            $well->is_saved = $status;
             $well->save();
         }
 
+        $message = $status ? 'Скважины сохранены' : 'Скважины удалены из сохраненных';
+
         return response()->json([
-            'message' => 'Статус сохранения изменен для нескольких скважин',
+            'message' => $message
         ], 200);
+    }
+
+    public function saveMultiple(Request $request)
+    {
+        return $this->toggleSaveStatus($request, 1);
+    }
+    public function unsaveMultiple(Request $request)
+    {
+        return $this->toggleSaveStatus($request, 0);
     }
 
 }
