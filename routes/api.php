@@ -18,10 +18,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Эндпоинты для скважин
     Route::get('/wells', [WellController::class, 'index'])->middleware('permission:read wells');
-    Route::get('/wells/{id}', [WellController::class, 'show'])->middleware('permission:read wells');
-    Route::put('/wells/{id}', [WellController::class, 'update'])->middleware('permission:save wells');
-    Route::patch('/wells/{id}/toggle-save', [WellController::class, 'toggleSave'])->middleware('permission:save wells');
-    Route::delete('/wells/{id}', [WellController::class, 'destroy'])->middleware('permission:delete wells');
+    Route::get('/well-numbers', [WellController::class, 'getWellNumbers'])->middleware('permission:read wells');
+    Route::put('/wells', [WellController::class, 'updateMultiple'])->middleware('permission:save wells');
+    Route::patch('/wells/toggle-save', [WellController::class, 'toggleMultipleSave'])->middleware('permission:save wells');
 
     // Эндпоинты для справочника
     Route::get('/handbook', [HandBookController::class, 'index'])->middleware('permission:read wells');
