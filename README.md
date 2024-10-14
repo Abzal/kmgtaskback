@@ -16,8 +16,3 @@ php artisan migrate
 ```
 php artisan db:seed
 ```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
