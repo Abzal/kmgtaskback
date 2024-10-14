@@ -7,20 +7,20 @@ use Illuminate\Http\Request;
 
 class WellController extends Controller
 {
-    // Получение скважин
+    /* Получение скважин*/
     public function index(Request $request)
     {
-        // Получить фильтры из запроса
+        /*Получить фильтры из запроса*/
         $field_id = $request->input('field_id');
         $is_saved = $request->input('is_saved');
         $well_type_id = $request->input('well_type_id');
         $well_status_id = $request->input('well_status_id');
         $well_numbers = $request->input('well_number'); // This is an array
 
-        // Eager загрузка связанных моделей с необходимыми полями
+        /*Eager загрузка связанных моделей с необходимыми полями*/
         $query = Well::with(['field:id,name', 'wellType:id,name', 'wellStatus:id,name', 'horizon:id,name']);
 
-        // Применить условия фильтрации
+        /*Применить условия фильтрации*/
         if ($field_id) {
             $query->where('field_id', $field_id);
         }
@@ -66,13 +66,12 @@ class WellController extends Controller
         return response()->json($wellNumbers, 200);
     }
 
-    // Обновление данных скважин
+    /*Обновление данных скважин*/
     public function updateMultiple(Request $request)
     {
-        // Validate the incoming request data
         $validatedData = $request->validate([
             'wells' => 'required|array',
-            'wells.*.id' => 'required|exists:wells,id',  // Ensure each well has a valid ID
+            'wells.*.id' => 'required|exists:wells,id',
             'wells.*.horizon_id' => 'nullable|exists:horizons,id',
             'wells.*.liquid_flow' => 'nullable|numeric',
             'wells.*.water_cut' => 'nullable|numeric',
@@ -80,25 +79,21 @@ class WellController extends Controller
             'wells.*.is_saved' => 'nullable|boolean',
         ]);
 
-        // Iterate over each well and update them individually
         foreach ($validatedData['wells'] as $wellData) {
-            // Find the well by its ID
             $well = Well::findOrFail($wellData['id']);
 
-            // Update the well fields
             $well->update($wellData);
         }
 
-        // Return a success response
         return response()->json(['message' => 'Скважины обнавлены успешно'], 200);
     }
 
-    // Изменение статуса сохраненности
+     /*Изменение статуса сохраненности*/
     public function toggleSaveStatus(Request $request, $status)
     {
         $validatedData = $request->validate([
             'well_numbers' => 'required|array',
-            'well_numbers.*' => 'required|exists:wells,well_number'  // Check that each well_number exists in the wells table
+            'well_numbers.*' => 'required|exists:wells,well_number'
         ]);
 
         $wells = Well::whereIn('well_number', $validatedData['well_numbers'])->get();

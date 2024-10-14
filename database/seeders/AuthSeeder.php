@@ -14,18 +14,18 @@ class AuthSeeder extends Seeder
      */
     public function run(): void
     {
-        // Создание прав
+        /*Создание прав*/
         Permission::create(['name' => 'delete wells']);
         Permission::create(['name' => 'save wells']);
         Permission::create(['name' => 'read wells']);
 
-        // Создание ролей
+        /*Создание ролей*/
         $roleRead = Role::create(['name' => 'reader']);
         $roleSave = Role::create(['name' => 'saver']);
         $roleDelete = Role::create(['name' => 'deleter']);
         $roleAdmin = Role::create(['name' => 'admin']);  // Admin role
 
-        // Назначение прав ролям
+        /*Назначение прав ролям*/
         $roleRead->givePermissionTo('read wells');
 
         $roleSave->givePermissionTo('save wells');
@@ -34,10 +34,10 @@ class AuthSeeder extends Seeder
         $roleDelete->givePermissionTo('delete wells');
         $roleDelete->givePermissionTo('read wells');
 
-        // Admin имеет все права
+        /*Admin имеет все права*/
         $roleAdmin->givePermissionTo(Permission::all());
 
-        // Создание пользователей и назначение ролей
+        /*Создание пользователей и назначение ролей*/
         $reader = User::create(['name' => 'Reader User', 'email' => 'reader@gmail.com', 'password' => bcrypt('12345678')]);
         $reader->assignRole('reader');
 
@@ -47,7 +47,7 @@ class AuthSeeder extends Seeder
         $deleter = User::create(['name' => 'Deleter User', 'email' => 'deleter@gmail.com', 'password' => bcrypt('12345678')]);
         $deleter->assignRole('deleter');
 
-        // Создание пользователя admin
+        /*Создание пользователя admin*/
         $admin = User::create(['name' => 'Admin User', 'email' => 'admin@gmail.com', 'password' => bcrypt('12345678')]);
         $admin->assignRole('admin');
     }

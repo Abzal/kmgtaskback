@@ -10,8 +10,7 @@ use Illuminate\Http\Request;
 
 class HandBookController extends Controller
 {
-    // Получение всех данных
-    public function index()
+      public function index()
     {
         $fields = Fields::get();
         $horizons = Horizons::get();
